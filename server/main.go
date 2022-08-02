@@ -1,37 +1,105 @@
 package main
 
+// 👈 Require the packages
 import (
-	"server/configs"
-	"server/routes"
+	"context"
+	"fmt"
+	"log"
+	"net/http"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/Amrbahaa22/blogPost/server/config"
+	"github.com/Amrbahaa22/blogPost/server/controllers"
+	"github.com/Amrbahaa22/blogPost/server/routes"
+	"github.com/Amrbahaa22/blogPost/server/services"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+var (
+	server      *gin.Engine
+	ctx         context.Context
+	mongoclient *mongo.Client
+
+	userService         services.UserService
+	UserController      controllers.UserController
+	UserRouteController routes.UserRouteController
+
+	authCollection      *mongo.Collection
+	authService         services.AuthService
+	AuthController      controllers.AuthController
+	AuthRouteController routes.AuthRouteController
+
+	postService         services.PostService
+	PostController      controllers.PostController
+	postCollection      *mongo.Collection
+	PostRouteController routes.PostRouteController
+)
+
+func init() {
+	config, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Could not load environment variables", err)
+	}
+
+	ctx = context.TODO()
+
+	// Connect to MongoDB
+	mongoconn := options.Client().ApplyURI(config.DBUri)
+	mongoclient, err := mongo.Connect(ctx, mongoconn)
+
+	if err != nil {
+		panic(err)
+	}
+
+	if err := mongoclient.Ping(ctx, readpref.Primary()); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("MongoDB successfully connected...")
+
+	// Collections
+	authCollection = mongoclient.Database("blog_post").Collection("users")
+	userService = services.NewUserServiceImpl(authCollection, ctx)
+	authService = services.NewAuthService(authCollection, ctx)
+	AuthController = controllers.NewAuthController(authService, userService)
+	AuthRouteController = routes.NewAuthRouteController(AuthController)
+
+	UserController = controllers.NewUserController(userService)
+	UserRouteController = routes.NewRouteUserController(UserController)
+	userService = services.NewUserServiceImpl(authCollection, ctx)
+
+	postCollection = mongoclient.Database("blog_post").Collection("posts")
+	postService = services.NewPostService(postCollection, ctx)
+	PostController = controllers.NewPostController(postService)
+	PostRouteController = routes.NewPostControllerRoute(PostController)
+	server = gin.Default()
+
+}
 func main() {
+	config, err := config.LoadConfig(".")
 
-	app := fiber.New()
+	if err != nil {
+		log.Fatal("Could not load config", err)
+	}
 
-	// run database
-	configs.ConnectDB()
+	defer mongoclient.Disconnect(ctx)
 
-	//routes
-	routes.UserRoute(app)
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{"http://localhost:8080", "http://localhost:3000"}
+	corsConfig.AllowCredentials = true
 
-	app.Listen(":" + configs.EnvGetPort())
+	server.Use(cors.New(corsConfig))
 
-	// your endpoints go here these are the endpoints
-	//C
-	// router.POST("/order/create", routes.AddOrder)
-	//R
-	// router.GET("/waiter/:waiter", routes.GetOrdersByWaiter)
-	// router.GET("/orders", routes.GetOrders)
-	// router.GET("/order/:id/", routes.GetOrderById)
-	//U
-	// router.PUT("/waiter/update/:id", routes.UpdateWaiter)
-	// router.PUT("/order/update/:id", routes.UpdateOrder)
-	//D
-	// router.DELETE("/order/delete/:id", routes.DeleteOrder)
+	router := server.Group("/api/v1")
+	router.GET("/healthchecker", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "welcome to go"})
+	})
 
-	//this runs the server and allows it to listen to requests.
-
+	AuthRouteController.AuthRoute(router, userService)
+	UserRouteController.UserRoute(router, userService)
+	PostRouteController.PostRoute(router, userService)
+	log.Fatal(server.Run(":" + config.Port))
 }
