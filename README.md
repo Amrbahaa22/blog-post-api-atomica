@@ -1,2 +1,2 @@
 # blogPost
-blog post using GO and React
+blog post using GO, docker, react and mongo db
