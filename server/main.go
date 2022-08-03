@@ -88,7 +88,7 @@ func main() {
 	defer mongoclient.Disconnect(ctx)
 
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:8080", "http://localhost:3000"}
+	corsConfig.AllowOrigins = []string{"http://localhost:8080", "http://localhost:3000", "https://sleepy-reef-94670.herokuapp.com"}
 	corsConfig.AllowCredentials = true
 
 	server.Use(cors.New(corsConfig))
@@ -101,5 +101,6 @@ func main() {
 	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
 	PostRouteController.PostRoute(router, userService)
+	if
 	log.Fatal(server.Run(":" + config.Port))
 }
