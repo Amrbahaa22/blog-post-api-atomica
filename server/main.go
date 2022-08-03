@@ -82,7 +82,7 @@ func init() {
 func main() {
 	port := os.Getenv("PORT")
 	config, err := config.LoadConfig(".")
-	log.Println("your port is", port)
+	log.Fatal("Could not load config", port)
 	if err != nil {
 		log.Fatal("Could not load config", err)
 	}
