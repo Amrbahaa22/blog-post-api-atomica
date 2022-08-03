@@ -82,7 +82,7 @@ func main() {
 	config, err := config.LoadConfig(".")
 
 	if err != nil {
-		log.Fatal("Could not load config ", err)
+		log.Fatal("Could not load config", err)
 	}
 
 	defer mongoclient.Disconnect(ctx)
