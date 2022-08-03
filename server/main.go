@@ -101,6 +101,5 @@ func main() {
 	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
 	PostRouteController.PostRoute(router, userService)
-	if
 	log.Fatal(server.Run(":" + config.Port))
 }
