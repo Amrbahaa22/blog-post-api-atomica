@@ -31,7 +31,6 @@ function Navbar() {
 							console.log("🚀 ---------------------------------------------🚀");
 							console.log("🚀 ~ file: Navbar.js ~ line 27 ~ .then ~ e", e);
 							console.log("🚀 ---------------------------------------------🚀");
-							history("/login");
 						});
 				}
 			})
@@ -54,7 +53,6 @@ function Navbar() {
 						console.log("🚀 ---------------------------------------------🚀");
 						console.log("🚀 ~ file: Navbar.js ~ line 27 ~ .then ~ e", e);
 						console.log("🚀 ---------------------------------------------🚀");
-						history("/login");
 					});
 			});
 
@@ -86,7 +84,7 @@ function Navbar() {
 			<div className="links">
 				<Link to="/">Home</Link>
 				{!isLoggedIn ? <Link to="/login"> Login </Link> : <></>}
-
+				{!isLoggedIn ? <Link to="/register">Sign Up</Link> : <></>}
 				<Link to="/Create">New Blog</Link>
 			</div>
 			<div className="blog-details" style={{ marginLeft: "40px" }}>

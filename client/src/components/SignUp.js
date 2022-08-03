@@ -4,40 +4,45 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import Navbar from "./Navbar";
 
-function Login() {
+function SignUp() {
 	const history = useNavigate();
 	const [email, setEmail] = useState("");
+	const [name, setName] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [isErr, setIsErr] = useState(false);
 
 	const click = (event) => {
 		event.preventDefault();
 		axios
 			.post(
-				"api/v1/auth/login",
+				"http://localhost:8080/api/v1/auth/register",
 				{
 					email: email,
+					name: name,
 					password: password,
+					passwordConfirm: confirmPassword,
 				},
 				{ withCredentials: true },
 			)
 			.then((res) => {
-				if (res.status === 200) {
+				if (res.status === 201) {
 					setIsErr(false);
 					setEmail("");
 					setPassword("");
-					history("/");
+					history("/login");
 				} else {
-					console.log("🚀 ------------------------------------------------🚀");
-					console.log("🚀 ~ file: Login.js ~ line 19 ~ click ~ res", res);
-					console.log("🚀 ------------------------------------------------🚀");
+					console.log("🚀 -------------------------------------------------🚀");
+					console.log("🚀 ~ file: SignUp.js ~ line 27 ~ .then ~ res", res);
+					console.log("🚀 -------------------------------------------------🚀");
 					setIsErr(true);
 				}
 			})
 			.catch((e) => {
-				console.log("🚀 --------------------------------------------🚀");
-				console.log("🚀 ~ file: Login.js ~ line 38 ~ click ~ e", e);
-				console.log("🚀 --------------------------------------------🚀");
+				console.log("🚀 ---------------------------------------------🚀");
+				console.log("🚀 ~ file: SignUp.js ~ line 39 ~ .then ~ e", e);
+				console.log("🚀 ---------------------------------------------🚀");
+
 				setIsErr(true);
 			});
 	};
@@ -46,10 +51,10 @@ function Login() {
 			<Navbar className="create" />
 
 			<div className="create">
-				<h2>Login</h2>
+				<h2>SignUp</h2>
 				{isErr ? (
 					<>
-						<div>username or password is not correct or user doesn't exist;</div>
+						<div>email exists or passwords don't match </div>
 					</>
 				) : (
 					<></>
@@ -58,8 +63,19 @@ function Login() {
 					<label>Email</label>
 					<input required value={email} onChange={(e) => setEmail(e.target.value)} />
 
+					<label>Name</label>
+					<input required value={name} onChange={(e) => setName(e.target.value)} />
+
 					<label>password</label>
 					<input required value={password} type="password" onChange={(e) => setPassword(e.target.value)} />
+
+					<label>Confirm password</label>
+					<input
+						required
+						value={confirmPassword}
+						type="password"
+						onChange={(e) => setConfirmPassword(e.target.value)}
+					/>
 
 					<button>Submit</button>
 				</form>
@@ -68,4 +84,4 @@ function Login() {
 	);
 }
 
-export default Login;
+export default SignUp;
