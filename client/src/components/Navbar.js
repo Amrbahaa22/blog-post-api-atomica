@@ -7,6 +7,7 @@ function Navbar() {
 	const [err, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const history = useNavigate();
+
 	useEffect(() => {
 		setLoading(true);
 		axios
@@ -14,6 +15,9 @@ function Navbar() {
 				withCredentials: true,
 			})
 			.then((res) => {
+				console.log("🚀 -------------------------------------------------🚀");
+				console.log("🚀 ~ file: Navbar.js ~ line 17 ~ .then ~ res", res);
+				console.log("🚀 -------------------------------------------------🚀");
 				if (res.status !== 200) {
 					axios
 						.get("api/v1/auth/refresh", {
@@ -32,36 +36,27 @@ function Navbar() {
 							console.log("🚀 ~ file: Navbar.js ~ line 27 ~ .then ~ e", e);
 							console.log("🚀 ---------------------------------------------🚀");
 						});
+				} else {
+					setIsLoggedIn(true);
 				}
 			})
 			.catch((e) => {
 				console.log("🚀 -------------------------------------------------🚀");
 				console.log("🚀 ~ file: Navbar.js ~ line 36 ~ useEffect ~ e", e);
 				console.log("🚀 -------------------------------------------------🚀");
-				axios
-					.get("api/v1/auth/refresh", {
-						withCredentials: true,
-					})
-					.then((res) => {
-						if (res.status !== 200) {
-							setError("you are not allowed to log in");
-							history("/login");
-						}
-					})
-					.catch((e) => {
-						setError(e.message);
-						console.log("🚀 ---------------------------------------------🚀");
-						console.log("🚀 ~ file: Navbar.js ~ line 27 ~ .then ~ e", e);
-						console.log("🚀 ---------------------------------------------🚀");
-					});
 			});
 
 		setLoading(false);
-	}, []);
+	}, [isLoggedIn]);
 	const handleLogOut = (e) => {
 		e.preventDefault();
 		axios.get("api/v1/auth/logout", { withCredentials: true }).then((res) => {
+			console.log("🚀 -----------------------------------------------------🚀");
+			console.log("🚀 ~ file: Navbar.js ~ line 53 ~ axios.get ~ res", res);
+			console.log("🚀 -----------------------------------------------------🚀");
+
 			if (res.status === 200) {
+				setIsLoggedIn(false);
 				history("/");
 			} else {
 				console.log("🚀 ------------------------------------------------🚀");
@@ -70,6 +65,7 @@ function Navbar() {
 			}
 		});
 	};
+
 	if (loading)
 		return (
 			<>
@@ -88,7 +84,7 @@ function Navbar() {
 				<Link to="/Create">New Blog</Link>
 			</div>
 			<div className="blog-details" style={{ marginLeft: "40px" }}>
-				<button onClick={handleLogOut}>log out</button>
+				{isLoggedIn ? <button onClick={handleLogOut}>log out</button> : <></>}
 			</div>
 		</nav>
 	);

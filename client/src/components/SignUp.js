@@ -16,7 +16,7 @@ function SignUp() {
 		event.preventDefault();
 		axios
 			.post(
-				"http://localhost:8080/api/v1/auth/register",
+				"api/v1/auth/register",
 				{
 					email: email,
 					name: name,

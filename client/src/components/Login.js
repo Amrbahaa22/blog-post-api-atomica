@@ -49,7 +49,7 @@ function Login() {
 				<h2>Login</h2>
 				{isErr ? (
 					<>
-						<div>username or password is not correct or user doesn't exist;</div>
+						<div>username or password is not correct or user doesn't exist</div>
 					</>
 				) : (
 					<></>
