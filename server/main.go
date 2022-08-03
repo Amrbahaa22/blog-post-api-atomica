@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/Amrbahaa22/blogPost/server/config"
 	"github.com/Amrbahaa22/blogPost/server/controllers"
@@ -80,11 +79,10 @@ func init() {
 
 }
 func main() {
-	port := os.Getenv("PORT")
 	config, err := config.LoadConfig(".")
-	log.Fatal("Could not load config", port)
+
 	if err != nil {
-		log.Fatal("Could not load config", err)
+		log.Fatal("Could not load config ", err)
 	}
 
 	defer mongoclient.Disconnect(ctx)
