@@ -15,7 +15,7 @@ function Create() {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/api/v1/users/me", {
+			.get("api/v1/users/me", {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -43,7 +43,7 @@ function Create() {
 		event.preventDefault();
 		axios
 			.post(
-				"http://localhost:8080/api/v1/posts/",
+				"api/v1/posts/",
 				{
 					title: title,
 					content: text,

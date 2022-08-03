@@ -10,13 +10,13 @@ function Navbar() {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/api/v1/users/me", {
+			.get("api/v1/users/me", {
 				withCredentials: true,
 			})
 			.then((res) => {
 				if (res.status !== 200) {
 					axios
-						.get("http://localhost:8080/api/v1/auth/refresh", {
+						.get("api/v1/auth/refresh", {
 							withCredentials: true,
 						})
 						.then((res) => {
@@ -40,7 +40,7 @@ function Navbar() {
 				console.log("🚀 ~ file: Navbar.js ~ line 36 ~ useEffect ~ e", e);
 				console.log("🚀 -------------------------------------------------🚀");
 				axios
-					.get("http://localhost:8080/api/v1/auth/refresh", {
+					.get("api/v1/auth/refresh", {
 						withCredentials: true,
 					})
 					.then((res) => {
@@ -62,7 +62,7 @@ function Navbar() {
 	}, []);
 	const handleLogOut = (e) => {
 		e.preventDefault();
-		axios.get("http://localhost:8080/api/v1/auth/logout", { withCredentials: true }).then((res) => {
+		axios.get("api/v1/auth/logout", { withCredentials: true }).then((res) => {
 			if (res.status === 200) {
 				history("/");
 			} else {

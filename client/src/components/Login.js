@@ -14,7 +14,7 @@ function Login() {
 		event.preventDefault();
 		axios
 			.post(
-				"http://localhost:8080/api/v1/auth/login",
+				"api/v1/auth/login",
 				{
 					email: email,
 					password: password,

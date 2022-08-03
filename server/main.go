@@ -12,6 +12,7 @@ import (
 	"github.com/Amrbahaa22/blogPost/server/routes"
 	"github.com/Amrbahaa22/blogPost/server/services"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -76,6 +77,7 @@ func init() {
 	PostController = controllers.NewPostController(postService)
 	PostRouteController = routes.NewPostControllerRoute(PostController)
 	server = gin.Default()
+	server.Use(static.Serve("/", static.LocalFile("./web", true)))
 
 }
 func main() {

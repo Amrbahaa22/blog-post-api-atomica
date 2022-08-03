@@ -11,7 +11,7 @@ function Home() {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get("http://localhost:8080/api/v1/posts/", {
+			.get("api/v1/posts/", {
 				withCredentials: true,
 			})
 			.then((res) => {

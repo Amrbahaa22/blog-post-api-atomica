@@ -14,7 +14,7 @@ function Blogdetails() {
 	useEffect(() => {
 		setLoading(true);
 		axios
-			.get(`http://localhost:8080/api/v1/posts/${id}`, {
+			.get(`api/v1/posts/${id}`, {
 				withCredentials: true,
 			})
 			.then((res) => {
@@ -35,7 +35,7 @@ function Blogdetails() {
 		setLoading(true);
 		if (data) {
 			axios
-				.get("http://localhost:8080/api/v1/users/me", {
+				.get("api/v1/users/me", {
 					withCredentials: true,
 				})
 				.then((res) => {
@@ -57,7 +57,7 @@ function Blogdetails() {
 	const click = async () => {
 		setLoading(true);
 		try {
-			await axios.delete(`http://localhost:8080/api/v1/posts/${id}`, {
+			await axios.delete(`api/v1/posts/${id}`, {
 				withCredentials: true,
 			});
 			history("/");
